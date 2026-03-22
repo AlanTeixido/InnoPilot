@@ -24,7 +24,7 @@ export default function LoadingSpinner() {
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
         style={{ fontSize: '14px', fontWeight: 500, color: 'rgba(245, 245, 240, 0.4)', fontFamily: 'Outfit' }}
       >
-        Claude está generando...
+        Generando contenido...
       </motion.p>
     </div>
   )

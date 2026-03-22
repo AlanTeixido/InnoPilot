@@ -63,12 +63,12 @@ input:focus, textarea:focus, select:focus {
 
 /* Generate button */
 .btn-generate {
-  background: linear-gradient(135deg, #f5a623, #f76b1c);
-  color: #000000;
-  font-weight: 800;
+  background: linear-gradient(135deg, #f5a623 0%, #f76b1c 100%) !important;
+  color: #000000 !important;
+  font-weight: 800 !important;
   letter-spacing: 1px;
   text-transform: uppercase;
-  box-shadow: 0 4px 24px rgba(245, 166, 35, 0.35), 0 0 48px rgba(245, 166, 35, 0.12);
+  box-shadow: 0 8px 32px rgba(245, 166, 35, 0.4) !important;
   transition: all 0.3s ease;
 }
 .btn-generate:hover {

@@ -8,9 +8,6 @@ export default function Footer() {
         <p style={{ fontSize: '11px', color: 'rgba(245, 245, 240, 0.2)', fontFamily: 'Outfit', letterSpacing: '0.5px' }}>
           <span style={{ color: 'rgba(245, 245, 240, 0.35)' }}>InnoPilot</span> v1.0 · Built by <span style={{ color: 'rgba(240, 165, 0, 0.4)' }}>@alanteixido</span>
         </p>
-        <p style={{ fontSize: '10px', color: 'rgba(245, 245, 240, 0.12)', fontFamily: 'Outfit', marginTop: '4px' }}>
-          Powered by Claude API
-        </p>
       </div>
     </footer>
   )

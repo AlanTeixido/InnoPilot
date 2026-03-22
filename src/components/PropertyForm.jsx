@@ -206,7 +206,7 @@ export default function PropertyForm({ onGenerate, loading }) {
         className="btn-generate w-full py-4 text-sm"
         style={{ borderRadius: '12px', fontFamily: 'Outfit' }}
       >
-        {loading ? 'Claude está generando...' : 'Generar contenido con IA'}
+        {loading ? 'Generando contenido...' : 'Generar contenido con IA'}
       </button>
     </motion.form>
   )
