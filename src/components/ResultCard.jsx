@@ -46,7 +46,7 @@ export default function ResultCard({ channel, icon, content }) {
     <div
       className="relative rounded-xl overflow-hidden"
       style={{
-        background: 'rgba(255, 255, 255, 0.02)',
+        background: '#111114',
         border: '1px solid rgba(240, 165, 0, 0.12)',
         borderTop: '2px solid #f0a500',
         boxShadow: '0 0 40px rgba(240, 165, 0, 0.04), 0 16px 48px rgba(0, 0, 0, 0.4)',

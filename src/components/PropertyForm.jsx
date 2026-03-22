@@ -79,16 +79,16 @@ export default function PropertyForm({ onGenerate, loading }) {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 0.1 }}
-      className={`relative p-8 sm:p-10 ${loading ? 'form-loading' : ''}`}
+      className={`relative p-10 sm:p-12 ${loading ? 'form-loading' : ''}`}
       style={{
-        background: 'rgba(255, 255, 255, 0.02)',
-        border: '1px solid rgba(240, 165, 0, 0.12)',
+        background: '#111114',
+        border: '1px solid rgba(245, 166, 35, 0.15)',
         borderRadius: '20px',
-        boxShadow: '0 0 80px rgba(240, 165, 0, 0.06), 0 32px 64px rgba(0, 0, 0, 0.6)',
+        boxShadow: '0 0 80px rgba(245, 166, 35, 0.06), 0 32px 64px rgba(0, 0, 0, 0.7)',
       }}
     >
       {/* Tipo de propiedad */}
-      <div className="mb-7">
+      <div className="mb-8">
         <label className={labelClass} style={labelColor}>Tipo de propiedad</label>
         <div className="flex flex-wrap gap-2 overflow-x-auto pb-1 sm:pb-0 sm:flex-wrap">
           {TIPOS.map((t) => (
@@ -98,7 +98,7 @@ export default function PropertyForm({ onGenerate, loading }) {
       </div>
 
       {/* Location & Price */}
-      <div className="grid sm:grid-cols-2 gap-6 mb-7">
+      <div className="grid sm:grid-cols-2 gap-6 mb-8">
         <div className="group">
           <label className={labelClass} style={labelColor}>Ubicación *</label>
           <input
@@ -125,7 +125,7 @@ export default function PropertyForm({ onGenerate, loading }) {
       </div>
 
       {/* Rooms, Baths, Sqm */}
-      <div className="grid grid-cols-3 gap-4 mb-7">
+      <div className="grid grid-cols-3 gap-4 mb-8">
         <div className="group">
           <label className={labelClass} style={labelColor}>Habitaciones</label>
           <input
@@ -163,7 +163,7 @@ export default function PropertyForm({ onGenerate, loading }) {
       </div>
 
       {/* Puntos fuertes */}
-      <div className="mb-7">
+      <div className="mb-8">
         <div className="flex items-center justify-between mb-3">
           <label className={labelClass} style={{ ...labelColor, marginBottom: 0 }}>Puntos fuertes</label>
           <span className="text-[11px] font-mono" style={{ color: charsUsed > maxChars * 0.9 ? '#f0a500' : 'rgba(245, 245, 240, 0.2)' }}>

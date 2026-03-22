@@ -65,13 +65,13 @@ export default function ResultsGrid({ results }) {
       </motion.div>
 
       {/* 2x2 Grid */}
-      <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
+      <div className="grid sm:grid-cols-2 gap-5 sm:gap-6">
         {CHANNELS.map((ch, i) => (
           <motion.div
             key={ch.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08, duration: 0.4 }}
+            initial={{ opacity: 0, y: 24, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ delay: i * 0.12, duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
           >
             <ResultCard
               channel={ch.label}
