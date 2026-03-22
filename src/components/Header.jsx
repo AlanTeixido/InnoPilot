@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import logo from '../assets/logo1.png'
 
 export default function Header({ genCount }) {
   return (
@@ -27,13 +28,11 @@ export default function Header({ genCount }) {
           >
             &larr; Inicio
           </Link>
-          <div className="flex flex-col">
+          <div className="flex items-center gap-2.5">
+            <img src={logo} alt="InnoPilot" style={{ height: 28, width: 28, borderRadius: 5 }} />
             <span className="font-heading" style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.5px', lineHeight: 1 }}>
               <span style={{ color: '#f5f5f0' }}>Inno</span>
               <span style={{ color: '#f0a500' }}>Pilot</span>
-            </span>
-            <span style={{ fontSize: '10px', letterSpacing: '2px', color: 'rgba(240, 165, 0, 0.5)', fontFamily: 'Outfit', fontWeight: 500, textTransform: 'uppercase', marginTop: '4px' }}>
-              Contenido inmobiliario
             </span>
           </div>
         </motion.div>

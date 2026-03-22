@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import logo from '../assets/logo1.png';
 
 const colors = {
   bg: '#08080a',
@@ -343,9 +344,12 @@ export default function LandingPage() {
             justifyContent: 'space-between',
           }}
         >
-          <Link to="/" style={{ textDecoration: 'none', fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em' }}>
-            <span style={{ color: colors.text }}>Inno</span>
-            <span style={{ color: '#f0a500' }}>Pilot</span>
+          <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <img src={logo} alt="InnoPilot" style={{ height: 32, width: 32, borderRadius: 6 }} />
+            <span style={{ fontSize: 22, fontWeight: 700, letterSpacing: '-0.02em' }}>
+              <span style={{ color: colors.text }}>Inno</span>
+              <span style={{ color: '#f0a500' }}>Pilot</span>
+            </span>
           </Link>
           <Link
             to="/app"
@@ -934,11 +938,14 @@ export default function LandingPage() {
               marginBottom: 32,
             }}
           />
-          <p style={{ textAlign: 'center', fontSize: 13, color: colors.textMuted, margin: 0 }}>
-            <span style={{ color: colors.text, fontWeight: 500 }}>Inno</span>
-            <span style={{ color: '#f0a500', fontWeight: 500 }}>Pilot</span>
-            {' '}v1.0 &middot; Built by @alanteixido
-          </p>
+          <div style={{ textAlign: 'center', fontSize: 13, color: colors.textMuted, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
+            <img src={logo} alt="" style={{ height: 20, width: 20, borderRadius: 4 }} />
+            <span>
+              <span style={{ color: colors.text, fontWeight: 500 }}>Inno</span>
+              <span style={{ color: '#f0a500', fontWeight: 500 }}>Pilot</span>
+              {' '}v1.0 &middot; Built by @alanteixido
+            </span>
+          </div>
         </div>
       </footer>
 
