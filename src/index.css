@@ -25,8 +25,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Noise texture overlay */
+/* Background layers */
 body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0, 255, 136, 0.04), transparent 70%),
+    radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 24px 24px;
+}
+
+/* Noise overlay */
+body::after {
   content: '';
   position: fixed;
   inset: 0;
@@ -39,16 +52,16 @@ body::before {
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-::-webkit-scrollbar-thumb:hover { background: #00ff88; }
+::-webkit-scrollbar-thumb { background: rgba(0, 255, 136, 0.3); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0, 255, 136, 0.6); }
 
 /* Focus glow */
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: #00ff88 !important;
-  box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.2), 0 0 20px rgba(0, 255, 136, 0.05);
+  box-shadow: 0 1px 0 0 #00ff88, 0 0 20px rgba(0, 255, 136, 0.08);
 }
 
 /* Shimmer animation */
@@ -61,17 +74,19 @@ input:focus, textarea:focus, select:focus {
   background: linear-gradient(
     110deg,
     #00ff88 0%,
-    #00cc6a 25%,
-    #00ff88 50%,
-    #00cc6a 75%,
+    #00cc6a 20%,
+    #00ffaa 40%,
+    #00ff88 60%,
+    #00cc6a 80%,
     #00ff88 100%
   );
   background-size: 200% 100%;
   transition: all 0.3s ease;
 }
 .shimmer-btn:hover {
-  animation: shimmer 2s linear infinite;
-  box-shadow: 0 0 30px rgba(0, 255, 136, 0.3), 0 0 60px rgba(0, 255, 136, 0.1);
+  animation: shimmer 1.8s linear infinite;
+  box-shadow: 0 0 30px rgba(0, 255, 136, 0.35), 0 0 80px rgba(0, 255, 136, 0.12);
+  transform: translateY(-1px);
 }
 
 /* Typewriter cursor */
@@ -82,8 +97,18 @@ input:focus, textarea:focus, select:focus {
 
 /* Pulse dot */
 @keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(1.5); }
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0, 255, 136, 0); }
+}
+
+/* Form glow pulse while loading */
+@keyframes form-glow {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.05), 0 32px 64px rgba(0, 0, 0, 0.5); }
+  50% { box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.15), 0 0 40px rgba(0, 255, 136, 0.06), 0 32px 64px rgba(0, 0, 0, 0.5); }
+}
+
+.form-loading {
+  animation: form-glow 2s ease-in-out infinite;
 }
 
 /* Dot grid pattern */
@@ -92,10 +117,10 @@ input:focus, textarea:focus, select:focus {
   background-size: 24px 24px;
 }
 
-/* Spinner */
-@keyframes orbit {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+/* Wave dots */
+@keyframes wave {
+  0%, 60%, 100% { transform: translateY(0); }
+  30% { transform: translateY(-8px); }
 }
 
 /* Selection */

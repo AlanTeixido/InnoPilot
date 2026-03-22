@@ -3,7 +3,7 @@ export default function Footer() {
     <footer className="py-8 border-t border-border">
       <div className="max-w-[720px] mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
         <p className="text-[11px] text-zinc-600 tracking-wide">
-          © 2026 <span className="text-zinc-400">InnoPilot</span>. Contenido generado con IA.
+          © 2026 <span className="text-zinc-400">InnoPilot</span> v1.0 · Built by <span className="text-zinc-400">@alanteixido</span>
         </p>
         <p className="text-[11px] text-zinc-700 tracking-wide">
           Powered by Claude API

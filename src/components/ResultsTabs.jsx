@@ -58,20 +58,29 @@ export default function ResultsTabs({ results }) {
         transition={{ delay: 0.1 }}
         className="flex items-center gap-2 mb-6"
       >
-        <div className="w-2 h-2 rounded-full bg-accent" style={{ animation: 'pulse-dot 2s ease-in-out infinite' }} />
+        <div
+          className="w-2 h-2 rounded-full bg-accent"
+          style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
+        />
         <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-[0.15em]">
           Generado con IA
         </span>
       </motion.div>
 
       {/* Tab bar */}
-      <div className="flex gap-1 p-1 rounded-xl mb-6" style={{ background: 'rgba(17, 17, 17, 0.8)', border: '1px solid rgba(255, 255, 255, 0.06)' }}>
+      <div
+        className="flex gap-1 p-1 rounded-xl mb-6"
+        style={{
+          background: 'rgba(255, 255, 255, 0.03)',
+          border: '1px solid rgba(255, 255, 255, 0.07)',
+        }}
+      >
         {TABS.map((tab, i) => (
           <motion.button
             key={tab.id}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 + i * 0.08 }}
+            transition={{ delay: i * 0.08 }}
             onClick={() => setActiveTab(tab.id)}
             className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-medium rounded-lg transition-all duration-200 ${
               activeTab === tab.id

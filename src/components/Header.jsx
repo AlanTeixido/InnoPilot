@@ -17,8 +17,8 @@ export default function Header() {
               <path d="M8 5V11M5.5 6.5L8 5L10.5 6.5" stroke="#00ff88" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </div>
-          {/* Logo text */}
-          <span className="text-lg font-bold tracking-tight">
+          {/* Logo text with tight tracking */}
+          <span style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif", fontWeight: 700, fontSize: '1.25rem', letterSpacing: '-1px' }}>
             <span className="text-white">Inno</span>
             <span className="text-accent">Pilot</span>
           </span>
@@ -28,9 +28,12 @@ export default function Header() {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-1.5"
+          className="flex items-center gap-2"
         >
-          <div className="w-1.5 h-1.5 rounded-full bg-accent" style={{ animation: 'pulse-dot 2s ease-in-out infinite' }} />
+          <div
+            className="w-2 h-2 rounded-full bg-accent"
+            style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
+          />
           <span className="text-[11px] font-medium text-zinc-500 uppercase tracking-widest">IA Activa</span>
         </motion.div>
       </div>

@@ -17,64 +17,25 @@ function App() {
     setError(null)
     setResults(null)
 
-    const prompt = `Eres un experto copywriter inmobiliario. Genera contenido de marketing para esta propiedad:
-
-Tipo: ${formData.tipo}
-Ubicación: ${formData.ubicacion}
-Precio: ${formData.precio}€
-Habitaciones: ${formData.habitaciones}
-Baños: ${formData.banos}
-Metros cuadrados: ${formData.metros}m²
-Puntos fuertes: ${formData.puntosFuertes}
-Tono: ${formData.tono}
-
-Genera EXACTAMENTE 4 bloques de texto separados por "---SEPARATOR---":
-
-1. IDEALISTA: Descripción profesional para portal inmobiliario (150-250 palabras). Formal pero atractivo.
-
-2. INSTAGRAM: Caption para Instagram con emojis, hashtags relevantes y call to action. Máx 2200 caracteres.
-
-3. EMAIL: Email de marketing para enviar a potenciales compradores. Incluye asunto, saludo, cuerpo y cierre. Profesional y persuasivo.
-
-4. ENGLISH: Professional property listing in English for international buyers (150-250 words).
-
-Responde SOLO con los 4 textos separados por "---SEPARATOR---", sin numerar ni añadir etiquetas.`
-
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
+      const response = await fetch('/api/generate', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': formData.apiKey,
-          'anthropic-version': '2023-06-01',
-          'anthropic-dangerous-direct-browser-access': 'true',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 4096,
-          messages: [{ role: 'user', content: prompt }],
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
       })
 
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}))
-        throw new Error(errData.error?.message || `Error ${response.status}`)
-      }
-
       const data = await response.json()
-      const text = data.content[0].text
-      const parts = text.split('---SEPARATOR---').map((p) => p.trim())
 
-      if (parts.length >= 4) {
-        setResults({
-          idealista: parts[0],
-          instagram: parts[1],
-          email: parts[2],
-          english: parts[3],
-        })
-      } else {
-        throw new Error('Formato de respuesta inesperado')
+      if (!response.ok) {
+        throw new Error(data.error || `Error ${response.status}`)
       }
+
+      setResults({
+        idealista: data.idealista,
+        instagram: data.instagram,
+        email: data.email,
+        english: data.english,
+      })
     } catch (err) {
       setError(err.message)
     } finally {
