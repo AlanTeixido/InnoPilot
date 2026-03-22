@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Header from './components/Header'
 import PropertyForm from './components/PropertyForm'
-import ResultsTabs from './components/ResultsTabs'
+import ResultsGrid from './components/ResultsGrid'
 import EmptyState from './components/EmptyState'
 import LoadingSpinner from './components/LoadingSpinner'
 import Footer from './components/Footer'
@@ -11,6 +11,7 @@ function App() {
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [genCount, setGenCount] = useState(0)
 
   const handleGenerate = async (formData) => {
     setLoading(true)
@@ -36,6 +37,7 @@ function App() {
         email: data.email,
         english: data.english,
       })
+      setGenCount((c) => c + 1)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -45,9 +47,9 @@ function App() {
 
   return (
     <div className="relative z-10 min-h-screen flex flex-col">
-      <Header />
+      <Header genCount={genCount} />
 
-      <main className="flex-1 w-full max-w-[720px] mx-auto px-4 sm:px-6 py-8 sm:py-12">
+      <main className="flex-1 w-full max-w-[720px] mx-auto px-5 sm:px-6 py-8 sm:py-12">
         <PropertyForm onGenerate={handleGenerate} loading={loading} />
 
         <AnimatePresence mode="wait">
@@ -57,9 +59,10 @@ function App() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="mt-8 p-4 rounded-lg border border-red-500/20 bg-red-500/5"
+              className="mt-8 p-4 rounded-xl"
+              style={{ border: '1px solid rgba(239, 68, 68, 0.2)', background: 'rgba(239, 68, 68, 0.05)' }}
             >
-              <p className="text-red-400 text-sm">{error}</p>
+              <p className="text-red-400 text-sm" style={{ fontFamily: 'Outfit' }}>{error}</p>
             </motion.div>
           )}
 
@@ -95,7 +98,7 @@ function App() {
               exit={{ opacity: 0 }}
               className="mt-10"
             >
-              <ResultsTabs results={results} />
+              <ResultsGrid results={results} />
             </motion.div>
           )}
         </AnimatePresence>

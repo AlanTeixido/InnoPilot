@@ -43,49 +43,50 @@ export default function ResultCard({ channel, icon, content }) {
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
+    <div
       className="relative rounded-xl overflow-hidden"
       style={{
-        background: 'rgba(255, 255, 255, 0.03)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.07)',
-        boxShadow: '0 0 0 1px rgba(0, 255, 136, 0.05), 0 32px 64px rgba(0, 0, 0, 0.5)',
+        background: 'rgba(255, 255, 255, 0.02)',
+        border: '1px solid rgba(240, 165, 0, 0.12)',
+        borderTop: '2px solid #f0a500',
+        boxShadow: '0 0 40px rgba(240, 165, 0, 0.04), 0 16px 48px rgba(0, 0, 0, 0.4)',
       }}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-3.5" style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.06)' }}>
-        <div className="flex items-center gap-2.5">
-          <span className="text-accent">{icon}</span>
-          <span className="text-xs font-semibold text-zinc-400 uppercase tracking-[0.15em]">{channel}</span>
-          <div className="flex items-center gap-1.5 ml-2">
-            <div
-              className="w-1.5 h-1.5 rounded-full bg-accent"
-              style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
-            />
-            <span className="text-[9px] text-zinc-600 uppercase tracking-widest font-medium">IA</span>
+      <div
+        className="flex items-center justify-between px-4 py-3"
+        style={{ borderBottom: '1px solid rgba(240, 165, 0, 0.08)' }}
+      >
+        <div className="flex items-center gap-2">
+          <span style={{ color: '#f0a500' }}>{icon}</span>
+          <span style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(245, 245, 240, 0.5)', fontFamily: 'Outfit', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+            {channel}
+          </span>
+          <div className="flex items-center gap-1 ml-1.5">
+            <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#f0a500', animation: 'pulse-dot 2s ease-in-out infinite' }} />
+            <span style={{ fontSize: '9px', color: 'rgba(240, 165, 0, 0.4)', fontFamily: 'Outfit', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 500 }}>IA</span>
           </div>
         </div>
 
         <div className="relative">
           <button
             onClick={handleCopy}
-            className={`p-2 rounded-lg transition-all duration-200 ${
-              copied
-                ? 'text-accent bg-accent/10'
-                : 'text-zinc-600 hover:text-zinc-300 hover:bg-white/5'
-            }`}
+            className="p-1.5 rounded-lg transition-all duration-200"
+            style={{
+              color: copied ? '#f0a500' : 'rgba(245, 245, 240, 0.25)',
+              background: copied ? 'rgba(240, 165, 0, 0.1)' : 'transparent',
+            }}
+            onMouseEnter={(e) => { if (!copied) e.currentTarget.style.color = 'rgba(245, 245, 240, 0.6)' }}
+            onMouseLeave={(e) => { if (!copied) e.currentTarget.style.color = 'rgba(245, 245, 240, 0.25)' }}
           >
-            {copied ? <HiCheck size={16} /> : <HiOutlineClipboardCopy size={16} />}
+            {copied ? <HiCheck size={15} /> : <HiOutlineClipboardCopy size={15} />}
           </button>
           {copied && (
             <motion.span
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0 }}
-              className="absolute -bottom-7 right-0 text-[10px] text-accent font-medium bg-accent/10 px-2 py-0.5 rounded whitespace-nowrap"
+              style={{ fontSize: '10px', color: '#f0a500', fontFamily: 'Outfit', fontWeight: 500, background: 'rgba(240, 165, 0, 0.1)' }}
+              className="absolute -bottom-7 right-0 px-2 py-0.5 rounded whitespace-nowrap"
             >
               Copiado!
             </motion.span>
@@ -94,17 +95,17 @@ export default function ResultCard({ channel, icon, content }) {
       </div>
 
       {/* Content */}
-      <div className="px-5 py-5 min-h-[200px]">
-        <p className="text-sm text-zinc-300 leading-relaxed whitespace-pre-wrap">
+      <div className="px-4 py-4 min-h-[160px] max-h-[320px] overflow-y-auto">
+        <p className="text-[13px] leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(245, 245, 240, 0.65)', fontFamily: 'Outfit' }}>
           {displayedText}
           {typing && (
             <span
-              className="inline-block w-0.5 h-4 bg-accent ml-0.5 align-text-bottom"
-              style={{ animation: 'blink 0.8s step-end infinite' }}
+              className="inline-block w-0.5 h-3.5 ml-0.5 align-text-bottom"
+              style={{ backgroundColor: '#f0a500', animation: 'blink 0.8s step-end infinite' }}
             />
           )}
         </p>
       </div>
-    </motion.div>
+    </div>
   )
 }

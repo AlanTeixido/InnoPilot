@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { motion } from 'framer-motion'
 import ResultCard from './ResultCard'
 
-const TABS = [
+const CHANNELS = [
   {
     id: 'idealista',
     label: 'Idealista',
@@ -46,9 +45,7 @@ const TABS = [
   },
 ]
 
-export default function ResultsTabs({ results }) {
-  const [activeTab, setActiveTab] = useState('idealista')
-
+export default function ResultsGrid({ results }) {
   return (
     <div>
       {/* AI Badge */}
@@ -59,54 +56,31 @@ export default function ResultsTabs({ results }) {
         className="flex items-center gap-2 mb-6"
       >
         <div
-          className="w-2 h-2 rounded-full bg-accent"
-          style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
+          className="w-2 h-2 rounded-full"
+          style={{ backgroundColor: '#f0a500', animation: 'pulse-dot 2s ease-in-out infinite' }}
         />
-        <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-[0.15em]">
-          Generado con IA
+        <span style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(240, 165, 0, 0.5)', fontFamily: 'Outfit', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+          Generado por IA
         </span>
       </motion.div>
 
-      {/* Tab bar */}
-      <div
-        className="flex gap-1 p-1 rounded-xl mb-6"
-        style={{
-          background: 'rgba(255, 255, 255, 0.03)',
-          border: '1px solid rgba(255, 255, 255, 0.07)',
-        }}
-      >
-        {TABS.map((tab, i) => (
-          <motion.button
-            key={tab.id}
-            initial={{ opacity: 0, y: 10 }}
+      {/* 2x2 Grid */}
+      <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
+        {CHANNELS.map((ch, i) => (
+          <motion.div
+            key={ch.id}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: i * 0.08 }}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-3 text-xs font-medium rounded-lg transition-all duration-200 ${
-              activeTab === tab.id
-                ? 'bg-accent/10 text-accent border border-accent/20'
-                : 'text-zinc-500 hover:text-zinc-300 border border-transparent'
-            }`}
+            transition={{ delay: i * 0.08, duration: 0.4 }}
           >
-            {tab.icon}
-            <span className="hidden sm:inline">{tab.label}</span>
-          </motion.button>
+            <ResultCard
+              channel={ch.label}
+              icon={ch.icon}
+              content={results[ch.id]}
+            />
+          </motion.div>
         ))}
       </div>
-
-      {/* Content */}
-      <motion.div
-        key={activeTab}
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <ResultCard
-          channel={TABS.find((t) => t.id === activeTab).label}
-          icon={TABS.find((t) => t.id === activeTab).icon}
-          content={results[activeTab]}
-        />
-      </motion.div>
     </div>
   )
 }

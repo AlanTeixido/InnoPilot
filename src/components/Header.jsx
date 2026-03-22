@@ -1,40 +1,44 @@
 import { motion } from 'framer-motion'
 
-export default function Header() {
+export default function Header({ genCount }) {
   return (
-    <header className="w-full border-b border-border py-5">
-      <div className="max-w-[720px] mx-auto px-4 sm:px-6 flex items-center justify-between">
+    <header className="w-full py-6" style={{ borderBottom: '1px solid rgba(240, 165, 0, 0.1)' }}>
+      <div className="max-w-[720px] mx-auto px-5 sm:px-6 flex items-center justify-between">
+        {/* Logo */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-2.5"
+          className="flex flex-col"
         >
-          {/* Logo mark */}
-          <div className="w-8 h-8 rounded-lg bg-accent/10 border border-accent/20 flex items-center justify-center">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M8 1L14 4.5V11.5L8 15L2 11.5V4.5L8 1Z" stroke="#00ff88" strokeWidth="1.5" strokeLinejoin="round" />
-              <path d="M8 5V11M5.5 6.5L8 5L10.5 6.5" stroke="#00ff88" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </div>
-          {/* Logo text with tight tracking */}
-          <span style={{ fontFamily: "'Space Grotesk', 'Inter', sans-serif", fontWeight: 700, fontSize: '1.25rem', letterSpacing: '-1px' }}>
-            <span className="text-white">Inno</span>
-            <span className="text-accent">Pilot</span>
+          <span className="font-heading" style={{ fontWeight: 700, fontSize: '1.5rem', letterSpacing: '-0.5px', lineHeight: 1 }}>
+            <span style={{ color: '#f5f5f0' }}>Inno</span>
+            <span style={{ color: '#f0a500' }}>Pilot</span>
+          </span>
+          <span style={{ fontSize: '10px', letterSpacing: '2px', color: 'rgba(240, 165, 0, 0.5)', fontFamily: 'Outfit', fontWeight: 500, textTransform: 'uppercase', marginTop: '4px' }}>
+            Contenido inmobiliario con IA
           </span>
         </motion.div>
 
+        {/* Right side */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-2"
+          className="flex items-center gap-5"
         >
-          <div
-            className="w-2 h-2 rounded-full bg-accent"
-            style={{ animation: 'pulse-dot 2s ease-in-out infinite' }}
-          />
-          <span className="text-[11px] font-medium text-zinc-500 uppercase tracking-widest">IA Activa</span>
+          <div className="flex items-center gap-2">
+            <div
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: '#f0a500', animation: 'pulse-dot 2s ease-in-out infinite' }}
+            />
+            <span style={{ fontSize: '11px', fontWeight: 500, color: 'rgba(240, 165, 0, 0.6)', fontFamily: 'Outfit', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+              Conectado
+            </span>
+          </div>
+          <span style={{ fontSize: '11px', fontWeight: 500, color: 'rgba(245, 245, 240, 0.25)', fontFamily: 'Outfit' }}>
+            {genCount} generacion{genCount !== 1 ? 'es' : ''}
+          </span>
         </motion.div>
       </div>
     </header>
