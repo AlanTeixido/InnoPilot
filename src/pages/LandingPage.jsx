@@ -1148,7 +1148,17 @@ export default function LandingPage() {
             <span>
               <span style={{ color: colors.textMuted, fontWeight: 500 }}>Inno</span>
               <span style={{ color: 'rgba(245, 166, 35, 0.5)', fontWeight: 500 }}>Pilot</span>
-              {' '}v1.0 &middot; Built by @alanteixido
+              {' '}v1.0 &middot; Built by{' '}
+              <a
+                href="https://alanteixido.dev"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: 'rgba(245, 166, 35, 0.45)', textDecoration: 'none', fontWeight: 600, transition: 'color 0.2s' }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = colors.accent }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(245, 166, 35, 0.45)' }}
+              >
+                @alanteixido
+              </a>
             </span>
           </div>
         </div>
