@@ -126,6 +126,62 @@ function ChannelCard({ channel, content, active, onClick }) {
   )
 }
 
+function MobileCopyButton({ channel, content }) {
+  const [copied, setCopied] = useState(false)
+  const toast = useToast()
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(content)
+    } catch {
+      const ta = document.createElement('textarea')
+      ta.value = content
+      document.body.appendChild(ta)
+      ta.select()
+      document.execCommand('copy')
+      document.body.removeChild(ta)
+    }
+    setCopied(true)
+    toast.success(`${channel.label} copiado al portapapeles`)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <motion.button
+      onClick={handleCopy}
+      whileTap={{ scale: 0.97 }}
+      style={{
+        width: '100%',
+        padding: '14px',
+        background: copied ? `${channel.color}15` : `${channel.color}10`,
+        border: `1px solid ${copied ? `${channel.color}50` : `${channel.color}25`}`,
+        borderRadius: 14,
+        color: channel.color,
+        fontSize: 15,
+        fontWeight: 700,
+        fontFamily: "'Cabinet Grotesk', system-ui",
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 8,
+      }}
+    >
+      {copied ? (
+        <>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><polyline points="20 6 9 17 4 12" /></svg>
+          Copiado
+        </>
+      ) : (
+        <>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+          Copiar {channel.label}
+        </>
+      )}
+    </motion.button>
+  )
+}
+
 export default function ResultsPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -199,6 +255,37 @@ export default function ResultsPage() {
     toast.success('Los 4 canales copiados')
   }
 
+  const [regenerating, setRegenerating] = useState(false)
+
+  const handleRegenerate = async () => {
+    if (!propertyInfo || regenerating) return
+    setRegenerating(true)
+    try {
+      const response = await fetch('/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...propertyInfo, userId: user?.id }),
+      })
+      const data = await response.json()
+      if (response.ok) {
+        const newResults = {
+          idealista: data.idealista,
+          instagram: data.instagram,
+          email: data.email,
+          english: data.english,
+        }
+        setResults(newResults)
+        sessionStorage.setItem('innopilot_results', JSON.stringify({ results: newResults, property: propertyInfo }))
+        toast.success('Contenido regenerado')
+      } else {
+        toast.error(data.error || 'Error al regenerar')
+      }
+    } catch {
+      toast.error('Error de conexion')
+    }
+    setRegenerating(false)
+  }
+
   if (!results) return null
 
   const activeContent = results[activeChannel]
@@ -219,6 +306,8 @@ export default function ResultsPage() {
         background: 'rgba(8, 8, 10, 0.9)',
         backdropFilter: 'blur(20px)',
         zIndex: 10,
+        flexWrap: 'wrap',
+        gap: 8,
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <button
@@ -238,7 +327,7 @@ export default function ResultsPage() {
             <span style={{ color: colors.accent }}>Pilot</span>
           </span>
           {propertyInfo && (
-            <span style={{ fontSize: 12, color: colors.textFaint, marginLeft: 8 }}>
+            <span className="property-info-header" style={{ fontSize: 12, color: colors.textFaint, marginLeft: 8 }}>
               {propertyInfo.tipo} en {propertyInfo.ubicacion} &middot; {propertyInfo.metros}m2
               {propertyInfo.precio ? ` &middot; ${Number(propertyInfo.precio).toLocaleString('es-ES')}EUR` : ''}
             </span>
@@ -269,7 +358,33 @@ export default function ResultsPage() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
               <rect x="9" y="9" width="13" height="13" rx="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
             </svg>
-            Copiar todo
+            <span className="btn-label">Copiar todo</span>
+          </motion.button>
+          <motion.button
+            onClick={handleRegenerate}
+            disabled={regenerating}
+            whileHover={!regenerating ? { scale: 1.02 } : {}}
+            whileTap={!regenerating ? { scale: 0.98 } : {}}
+            transition={springSnappy}
+            style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: `1px solid ${colors.border}`,
+              borderRadius: 10,
+              padding: '8px 16px',
+              color: regenerating ? colors.textFaint : colors.textSoft,
+              fontSize: 12,
+              fontWeight: 700,
+              fontFamily: "'Cabinet Grotesk', system-ui",
+              cursor: regenerating ? 'wait' : 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ animation: regenerating ? 'spin 1s linear infinite' : 'none' }}>
+              <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+            </svg>
+            <span className="btn-label">{regenerating ? 'Regenerando...' : 'Regenerar'}</span>
           </motion.button>
           <motion.button
             onClick={() => navigate('/app')}
@@ -295,9 +410,44 @@ export default function ResultsPage() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <path d="M12 5v14M5 12h14" />
             </svg>
-            Nueva generacion
+            <span className="btn-label">Nueva</span>
           </motion.button>
         </div>
+      </div>
+
+      {/* Mobile tabs */}
+      <div className="mobile-tabs" style={{
+        display: 'none',
+        overflowX: 'auto',
+        padding: '12px 16px',
+        gap: 6,
+        borderBottom: `1px solid ${colors.border}`,
+      }}>
+        {CHANNELS.map((ch) => (
+          <button
+            key={ch.id}
+            onClick={() => setActiveChannel(ch.id)}
+            style={{
+              background: activeChannel === ch.id ? `${ch.color}15` : 'transparent',
+              border: `1px solid ${activeChannel === ch.id ? `${ch.color}40` : colors.border}`,
+              borderRadius: 10,
+              padding: '8px 16px',
+              color: activeChannel === ch.id ? ch.color : colors.textMuted,
+              fontSize: 12,
+              fontWeight: 700,
+              fontFamily: "'Cabinet Grotesk', system-ui",
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              flexShrink: 0,
+            }}
+          >
+            {ch.icon}
+            {ch.label}
+          </button>
+        ))}
       </div>
 
       {/* Content */}
@@ -366,15 +516,28 @@ export default function ResultsPage() {
             }}>
               {activeContent}
             </div>
+
+            {/* Mobile copy button */}
+            <div className="mobile-copy-btn" style={{ display: 'none', marginTop: 32 }}>
+              <MobileCopyButton channel={activeChannelData} content={activeContent} />
+            </div>
           </motion.div>
         </div>
       </div>
 
       {/* Responsive */}
       <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
         @media (max-width: 768px) {
           .results-sidebar { display: none !important; }
           .results-content { padding: 24px 20px !important; }
+          .mobile-tabs { display: flex !important; }
+          .property-info-header { display: none !important; }
+          .btn-label { display: none !important; }
+          .mobile-copy-btn { display: block !important; }
         }
       `}</style>
     </div>
