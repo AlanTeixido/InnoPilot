@@ -10,6 +10,7 @@ import LandingPage from './pages/LandingPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import OnboardingPage from './pages/OnboardingPage.jsx'
 import PricingPage from './pages/PricingPage.jsx'
+import AdminPage from './pages/AdminPage.jsx'
 import ProtectedRoute from './lib/ProtectedRoute.jsx'
 
 function ScrollToTop() {
@@ -42,6 +43,11 @@ createRoot(document.getElementById('root')).render(
             <Route path="/app" element={
               <ProtectedRoute>
                 <App />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin" element={
+              <ProtectedRoute>
+                <AdminPage />
               </ProtectedRoute>
             } />
             <Route path="*" element={<Navigate to="/" replace />} />
