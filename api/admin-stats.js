@@ -27,11 +27,6 @@ export default async function handler(req, res) {
     // Get all users from auth to get emails
     const { data: { users } } = await supabase.auth.admin.listUsers()
 
-    // Get generation counts per user
-    const { data: genCounts } = await supabase
-      .rpc('get_generation_counts')
-      .catch(() => ({ data: null }))
-
     // Merge data
     const enrichedProfiles = (profiles || []).map((p) => {
       const authUser = users?.find((u) => u.id === p.id)
