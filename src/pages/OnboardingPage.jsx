@@ -40,7 +40,7 @@ export default function OnboardingPage() {
     if (!user) return
     setLoading(true)
 
-    await supabase
+    const { error } = await supabase
       .from('profiles')
       .update({
         company_name: form.company_name || null,
@@ -51,19 +51,27 @@ export default function OnboardingPage() {
       })
       .eq('id', user.id)
 
+    if (error) {
+      setLoading(false)
+      return
+    }
+
     await refreshProfile()
     setLoading(false)
-    navigate('/app')
+    navigate('/app', { replace: true })
   }
 
   const handleSkip = async () => {
     if (!user) return
-    await supabase
+    const { error } = await supabase
       .from('profiles')
       .update({ onboarding_completed: true })
       .eq('id', user.id)
+
+    if (error) return
+
     await refreshProfile()
-    navigate('/app')
+    navigate('/app', { replace: true })
   }
 
   const inputStyle = {

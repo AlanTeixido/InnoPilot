@@ -64,8 +64,8 @@ export function AuthProvider({ children }) {
     setProfile(null)
   }
 
-  const refreshProfile = () => {
-    if (user) fetchProfile(user.id)
+  const refreshProfile = async () => {
+    if (user) await fetchProfile(user.id)
   }
 
   return (
