@@ -58,28 +58,63 @@ export default async function handler(req, res) {
     }
   }
 
-  const prompt = `Eres un experto copywriter inmobiliario. Genera contenido de marketing para esta propiedad:
+  const tonoInstructions = {
+    'Profesional': 'Usa un tono profesional, formal pero cercano. Vocabulario preciso y descriptivo.',
+    'Cercano': 'Usa un tono calido y cercano, como si hablaras con un amigo. Naturalidad ante todo.',
+    'Premium': 'Usa un tono exclusivo y sofisticado. Palabras como "excepcional", "privilegiado", "selecto". Transmite lujo.',
+    'Emocional': 'Apela a las emociones: el hogar sonado, crear recuerdos, el lugar perfecto para la familia.',
+    'Directo': 'Ve al grano. Datos concretos, sin florituras. Eficiente y claro.',
+  }
 
-Tipo: ${tipo || 'Piso'}
-Ubicacion: ${ubicacion}
-Precio: ${precio ? precio + 'EUR' : 'A consultar'}
-Habitaciones: ${habitaciones || 'N/A'}
-Banos: ${banos || 'N/A'}
-Metros cuadrados: ${metros}m2
-Puntos fuertes: ${puntosFuertes || 'Sin especificar'}
-Tono: ${tono || 'Profesional'}
+  const tonoGuide = tonoInstructions[tono] || tonoInstructions['Profesional']
 
-Genera EXACTAMENTE 4 bloques de texto separados por "---SEPARATOR---":
+  const prompt = `Eres un copywriter inmobiliario de elite en Espana. Conoces el mercado, los portales y como vender propiedades con palabras.
 
-1. IDEALISTA: Descripcion profesional para portal inmobiliario (150-250 palabras). Formal pero atractivo.
+PROPIEDAD:
+- Tipo: ${tipo || 'Piso'}
+- Ubicacion: ${ubicacion}
+- Precio: ${precio ? precio + ' EUR' : 'A consultar'}
+- Habitaciones: ${habitaciones || 'No especificado'}
+- Banos: ${banos || 'No especificado'}
+- Superficie: ${metros} m2
+- Puntos fuertes: ${puntosFuertes || 'Sin especificar'}
 
-2. INSTAGRAM: Caption para Instagram con emojis, hashtags relevantes y call to action. Max 2200 caracteres.
+TONO: ${tono || 'Profesional'} — ${tonoGuide}
 
-3. EMAIL: Email de marketing para enviar a potenciales compradores. Incluye asunto, saludo, cuerpo y cierre. Profesional y persuasivo.
+GENERA 4 textos separados por "---SEPARATOR---":
 
-4. ENGLISH: Professional property listing in English for international buyers (150-250 words).
+1. IDEALISTA/FOTOCASA (200-300 palabras):
+- Empieza con una frase gancho que capture la atencion
+- Describe la distribucion y espacios de forma fluida, no como una lista
+- Destaca la ubicacion y servicios cercanos
+- Incluye los puntos fuertes de forma natural
+- Cierra con una llamada a la accion para visitar
+- NO uses frases genericas como "no te lo pierdas" o "oportunidad unica"
 
-Responde SOLO con los 4 textos separados por "---SEPARATOR---", sin numerar ni anadir etiquetas.`
+2. INSTAGRAM (max 2200 caracteres):
+- Caption atractivo con emojis estrategicos (no excesivos)
+- Estructura: gancho + descripcion + beneficios + CTA
+- 8-12 hashtags relevantes y especificos al final (mezcla populares con nicho)
+- Incluye hashtags de la zona/ciudad
+- Tono conversacional adaptado a redes sociales
+
+3. EMAIL MARKETING:
+- Asunto: corto, intrigante, que genere apertura (max 60 caracteres)
+- Saludo personalizado con [Nombre]
+- Primer parrafo: por que les escribes y que hace especial esta propiedad
+- Segundo parrafo: detalles clave y puntos fuertes
+- Tercer parrafo: urgencia sutil y llamada a visitar
+- Firma profesional con placeholders [Tu Nombre], [Agencia], [Telefono]
+- NO uses "Espero que este mensaje te encuentre bien"
+
+4. ENGLISH VERSION (200-300 words):
+- Professional British English listing for international buyers
+- Highlight location advantages for expats/investors
+- Include practical details (size in m2 and sq ft)
+- Mention proximity to airports, international schools, or beaches if relevant
+- Professional closing with viewing invitation
+
+Responde SOLO con los 4 textos separados por "---SEPARATOR---". Sin etiquetas, sin numeracion, sin explicaciones.`
 
   try {
     const response = await fetch('https://api.openai.com/v1/chat/completions', {

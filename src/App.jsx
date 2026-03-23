@@ -54,8 +54,8 @@ function App() {
   }
 
   const saveGeneration = async (formData, resultData) => {
-    if (!user) return
-    await supabase.from('generations').insert({
+    if (!user) return null
+    const { data } = await supabase.from('generations').insert({
       user_id: user.id,
       property_type: formData.tipo,
       location: formData.ubicacion,
@@ -69,8 +69,9 @@ function App() {
       result_instagram: resultData.instagram,
       result_email: resultData.email,
       result_english: resultData.english,
-    })
+    }).select('id').single()
     loadHistory()
+    return data?.id || null
   }
 
   const handleGenerate = async (formData) => {
@@ -106,8 +107,15 @@ function App() {
       setGenCount((c) => c + 1)
       toast.success('Contenido generado correctamente')
 
-      // Save to history
-      saveGeneration(formData, resultData)
+      // Save to history and get the ID
+      const genId = await saveGeneration(formData, resultData)
+
+      // Store in session and navigate to results
+      sessionStorage.setItem('innopilot_results', JSON.stringify({
+        results: resultData,
+        property: formData,
+      }))
+      navigate(genId ? `/results?id=${genId}` : '/results')
 
       // Refresh profile to update generations_used
       refreshProfile()
@@ -119,14 +127,7 @@ function App() {
   }
 
   const handleHistorySelect = (item) => {
-    setResults({
-      idealista: item.result_idealista,
-      instagram: item.result_instagram,
-      email: item.result_email,
-      english: item.result_english,
-    })
-    setShowHistory(false)
-    toast.info('Generacion anterior cargada')
+    navigate(`/results?id=${item.id}`)
   }
 
   return (
