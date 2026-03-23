@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
@@ -7,9 +8,43 @@ const spring = { type: 'spring', stiffness: 300, damping: 30 }
 
 export default function Header({ genCount }) {
   const { user, profile, signOut } = useAuth()
+  const [upgrading, setUpgrading] = useState(false)
 
   const planLabel = profile?.plan === 'pro' ? 'Pro' : profile?.plan === 'agency' ? 'Agency' : 'Free'
   const usageText = profile ? `${profile.generations_used}/${profile.generations_limit}` : ''
+  const isFreePlan = !profile?.plan || profile.plan === 'free'
+
+  const handleUpgrade = async () => {
+    if (!user || upgrading) return
+    setUpgrading(true)
+    try {
+      const res = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: 'pro', userId: user.id, email: user.email }),
+      })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+    } catch {
+      // silently fail
+    }
+    setUpgrading(false)
+  }
+
+  const handleManageBilling = async () => {
+    if (!user) return
+    try {
+      const res = await fetch('/api/billing-portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: user.id }),
+      })
+      const data = await res.json()
+      if (data.url) window.location.href = data.url
+    } catch {
+      // silently fail
+    }
+  }
 
   return (
     <header className="w-full py-5" style={{ borderBottom: '1px solid rgba(240, 165, 0, 0.08)' }}>
@@ -52,9 +87,24 @@ export default function Header({ genCount }) {
           className="flex items-center gap-3"
         >
           {profile && (
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#f0a500', fontFamily: "'Cabinet Grotesk', system-ui", background: 'rgba(240, 165, 0, 0.08)', padding: '4px 12px', borderRadius: 8, letterSpacing: '0.5px' }}>
-              {planLabel}
-            </span>
+            <button
+              onClick={isFreePlan ? handleUpgrade : handleManageBilling}
+              style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                color: isFreePlan ? '#0a0a0a' : '#f0a500',
+                fontFamily: "'Cabinet Grotesk', system-ui",
+                background: isFreePlan ? 'linear-gradient(135deg, #f5a623, #f76b1c)' : 'rgba(240, 165, 0, 0.08)',
+                padding: '5px 14px',
+                borderRadius: 8,
+                letterSpacing: '0.3px',
+                border: 'none',
+                cursor: 'pointer',
+                transition: 'all 0.25s ease',
+              }}
+            >
+              {isFreePlan ? 'Upgrade' : planLabel}
+            </button>
           )}
           {usageText && (
             <span style={{ fontSize: '11px', fontWeight: 500, color: 'rgba(245, 245, 240, 0.25)', fontFamily: "'Cabinet Grotesk', system-ui" }}>

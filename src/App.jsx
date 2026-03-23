@@ -1,22 +1,70 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Header from './components/Header'
 import PropertyForm from './components/PropertyForm'
 import ResultsGrid from './components/ResultsGrid'
 import EmptyState from './components/EmptyState'
 import LoadingSpinner from './components/LoadingSpinner'
+import HistoryPanel from './components/HistoryPanel'
 import Footer from './components/Footer'
+import { useAuth } from './lib/AuthContext'
+import { supabase } from './lib/supabase'
+
+const spring = { type: 'spring', stiffness: 100, damping: 20 }
+const springSnappy = { type: 'spring', stiffness: 300, damping: 30 }
 
 function App() {
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [genCount, setGenCount] = useState(0)
+  const [showHistory, setShowHistory] = useState(false)
+  const [history, setHistory] = useState([])
+  const [lastFormData, setLastFormData] = useState(null)
+
+  const { user, profile, refreshProfile } = useAuth()
+
+  // Load history on mount
+  useEffect(() => {
+    if (user) loadHistory()
+  }, [user])
+
+  const loadHistory = async () => {
+    if (!user) return
+    const { data } = await supabase
+      .from('generations')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(50)
+    if (data) setHistory(data)
+  }
+
+  const saveGeneration = async (formData, resultData) => {
+    if (!user) return
+    await supabase.from('generations').insert({
+      user_id: user.id,
+      property_type: formData.tipo,
+      location: formData.ubicacion,
+      price: formData.precio ? parseInt(formData.precio) : null,
+      rooms: formData.habitaciones ? parseInt(formData.habitaciones) : null,
+      bathrooms: formData.banos ? parseInt(formData.banos) : null,
+      sqm: parseInt(formData.metros),
+      highlights: formData.puntosFuertes || null,
+      tone: formData.tono,
+      result_idealista: resultData.idealista,
+      result_instagram: resultData.instagram,
+      result_email: resultData.email,
+      result_english: resultData.english,
+    })
+    loadHistory()
+  }
 
   const handleGenerate = async (formData) => {
     setLoading(true)
     setError(null)
     setResults(null)
+    setLastFormData(formData)
 
     try {
       const response = await fetch('/api/generate', {
@@ -31,13 +79,21 @@ function App() {
         throw new Error(data.error || `Error ${response.status}`)
       }
 
-      setResults({
+      const resultData = {
         idealista: data.idealista,
         instagram: data.instagram,
         email: data.email,
         english: data.english,
-      })
+      }
+
+      setResults(resultData)
       setGenCount((c) => c + 1)
+
+      // Save to history
+      saveGeneration(formData, resultData)
+
+      // Refresh profile to update generations_used
+      refreshProfile()
     } catch (err) {
       setError(err.message)
     } finally {
@@ -45,11 +101,76 @@ function App() {
     }
   }
 
+  const handleHistorySelect = (item) => {
+    setResults({
+      idealista: item.result_idealista,
+      instagram: item.result_instagram,
+      email: item.result_email,
+      english: item.result_english,
+    })
+    setShowHistory(false)
+  }
+
   return (
     <div className="relative z-10 min-h-screen flex flex-col">
       <Header genCount={genCount} />
 
       <main className="flex-1 w-full max-w-[720px] mx-auto px-5 sm:px-6 py-8 sm:py-12">
+        {/* History toggle */}
+        {history.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex justify-end mb-4"
+          >
+            <button
+              onClick={() => setShowHistory(!showHistory)}
+              style={{
+                background: showHistory ? 'rgba(245, 166, 35, 0.08)' : 'transparent',
+                border: `1px solid ${showHistory ? 'rgba(245, 166, 35, 0.3)' : 'rgba(255, 255, 255, 0.08)'}`,
+                color: showHistory ? '#f5a623' : 'rgba(245, 245, 240, 0.35)',
+                fontSize: 12,
+                fontWeight: 600,
+                fontFamily: "'Cabinet Grotesk', system-ui",
+                padding: '6px 14px',
+                borderRadius: 10,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 6,
+                transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                letterSpacing: '0.3px',
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              Historial ({history.length})
+            </button>
+          </motion.div>
+        )}
+
+        {/* History panel */}
+        <AnimatePresence>
+          {showHistory && (
+            <motion.div
+              key="history"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={spring}
+              className="mb-8 overflow-hidden"
+            >
+              <HistoryPanel
+                history={history}
+                onSelect={handleHistorySelect}
+                onClose={() => setShowHistory(false)}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         <PropertyForm onGenerate={handleGenerate} loading={loading} />
 
         <AnimatePresence mode="wait">
@@ -59,10 +180,11 @@ function App() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
+              transition={springSnappy}
               className="mt-8 p-4 rounded-xl"
-              style={{ border: '1px solid rgba(239, 68, 68, 0.2)', background: 'rgba(239, 68, 68, 0.05)' }}
+              style={{ border: '1px solid rgba(239, 68, 68, 0.15)', background: 'rgba(239, 68, 68, 0.04)' }}
             >
-              <p className="text-red-400 text-sm" style={{ fontFamily: 'Outfit' }}>{error}</p>
+              <p className="text-red-400 text-sm" style={{ fontFamily: "'Cabinet Grotesk', system-ui" }}>{error}</p>
             </motion.div>
           )}
 
@@ -72,6 +194,7 @@ function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={spring}
               className="mt-12"
             >
               <LoadingSpinner />
@@ -84,6 +207,7 @@ function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
+              transition={spring}
               className="mt-12"
             >
               <EmptyState />
@@ -93,9 +217,10 @@ function App() {
           {results && !loading && (
             <motion.div
               key="results"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
+              transition={spring}
               className="mt-10"
             >
               <ResultsGrid results={results} />

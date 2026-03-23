@@ -13,7 +13,7 @@ export default function ProtectedRoute({ children }) {
         alignItems: 'center',
         justifyContent: 'center',
         color: 'rgba(245, 245, 240, 0.4)',
-        fontFamily: "'Outfit', system-ui, sans-serif",
+        fontFamily: "'Cabinet Grotesk', system-ui, sans-serif",
         fontSize: 14,
       }}>
         Cargando...
