@@ -112,7 +112,12 @@ Responde SOLO con los 4 textos separados por "---SEPARATOR---", sin numerar ni a
     if (parts.length >= 4) {
       // Increment generations_used
       if (userId) {
-        await supabase.rpc('increment_generations', { user_id_input: userId }).catch(() => {})
+        try {
+          await supabase.rpc('increment_generations', { user_id_input: userId })
+        } catch {
+          // fallback
+          await supabase.from('profiles').update({ generations_used: 1 }).eq('id', userId)
+        }
       }
 
       return res.status(200).json({
