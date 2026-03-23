@@ -8,6 +8,7 @@ import { ToastProvider } from './components/Toast.jsx'
 import App from './App.jsx'
 import LandingPage from './pages/LandingPage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
+import OnboardingPage from './pages/OnboardingPage.jsx'
 import ProtectedRoute from './lib/ProtectedRoute.jsx'
 
 function ScrollToTop() {
@@ -27,6 +28,11 @@ createRoot(document.getElementById('root')).render(
           <Routes>
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/onboarding" element={
+              <ProtectedRoute>
+                <OnboardingPage />
+              </ProtectedRoute>
+            } />
             <Route path="/app" element={
               <ProtectedRoute>
                 <App />
