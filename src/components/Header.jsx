@@ -1,8 +1,14 @@
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../lib/AuthContext'
 import logo from '../assets/logo1.png'
 
 export default function Header({ genCount }) {
+  const { user, profile, signOut } = useAuth()
+
+  const planLabel = profile?.plan === 'pro' ? 'Pro' : profile?.plan === 'agency' ? 'Agency' : 'Free'
+  const usageText = profile ? `${profile.generations_used}/${profile.generations_limit}` : ''
+
   return (
     <header className="w-full py-6" style={{ borderBottom: '1px solid rgba(240, 165, 0, 0.1)' }}>
       <div className="max-w-[720px] mx-auto px-5 sm:px-6 flex items-center justify-between">
@@ -42,20 +48,42 @@ export default function Header({ genCount }) {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.5 }}
-          className="flex items-center gap-5"
+          className="flex items-center gap-4"
         >
-          <div className="flex items-center gap-2">
-            <div
-              className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: '#f0a500', animation: 'pulse-dot 2s ease-in-out infinite' }}
-            />
-            <span style={{ fontSize: '11px', fontWeight: 500, color: 'rgba(240, 165, 0, 0.6)', fontFamily: 'Outfit', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
-              Conectado
+          {profile && (
+            <span style={{ fontSize: '11px', fontWeight: 600, color: '#f0a500', fontFamily: 'Outfit', background: 'rgba(240, 165, 0, 0.1)', padding: '4px 10px', borderRadius: 6 }}>
+              {planLabel}
             </span>
-          </div>
+          )}
+          {usageText && (
+            <span style={{ fontSize: '11px', fontWeight: 500, color: 'rgba(245, 245, 240, 0.3)', fontFamily: 'Outfit' }}>
+              {usageText} gen
+            </span>
+          )}
           <span style={{ fontSize: '11px', fontWeight: 500, color: 'rgba(245, 245, 240, 0.25)', fontFamily: 'Outfit' }}>
             {genCount} generacion{genCount !== 1 ? 'es' : ''}
           </span>
+          {user && (
+            <button
+              onClick={signOut}
+              style={{
+                background: 'none',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                color: 'rgba(245, 245, 240, 0.4)',
+                fontSize: '11px',
+                fontFamily: 'Outfit',
+                fontWeight: 500,
+                padding: '4px 12px',
+                borderRadius: 6,
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.5)'; e.currentTarget.style.color = '#ef4444' }}
+              onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)'; e.currentTarget.style.color = 'rgba(245, 245, 240, 0.4)' }}
+            >
+              Salir
+            </button>
+          )}
         </motion.div>
       </div>
     </header>
