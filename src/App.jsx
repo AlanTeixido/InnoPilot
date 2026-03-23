@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useSearchParams } from 'react-router-dom'
 import Header from './components/Header'
 import PropertyForm from './components/PropertyForm'
 import ResultsGrid from './components/ResultsGrid'
@@ -8,6 +9,7 @@ import LoadingSpinner from './components/LoadingSpinner'
 import HistoryPanel from './components/HistoryPanel'
 import Footer from './components/Footer'
 import { useAuth } from './lib/AuthContext'
+import { useToast } from './components/Toast'
 import { supabase } from './lib/supabase'
 
 const spring = { type: 'spring', stiffness: 100, damping: 20 }
@@ -20,9 +22,19 @@ function App() {
   const [genCount, setGenCount] = useState(0)
   const [showHistory, setShowHistory] = useState(false)
   const [history, setHistory] = useState([])
-  const [lastFormData, setLastFormData] = useState(null)
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const { user, profile, refreshProfile } = useAuth()
+  const toast = useToast()
+
+  // Check for upgrade success
+  useEffect(() => {
+    if (searchParams.get('upgraded') === 'true') {
+      toast.success('Plan actualizado correctamente')
+      setSearchParams({}, { replace: true })
+      refreshProfile()
+    }
+  }, [])
 
   // Load history on mount
   useEffect(() => {
@@ -64,18 +76,20 @@ function App() {
     setLoading(true)
     setError(null)
     setResults(null)
-    setLastFormData(formData)
 
     try {
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, userId: user?.id }),
       })
 
       const data = await response.json()
 
       if (!response.ok) {
+        if (data.limit_reached) {
+          toast.error('Limite alcanzado. Actualiza tu plan.')
+        }
         throw new Error(data.error || `Error ${response.status}`)
       }
 
@@ -88,6 +102,7 @@ function App() {
 
       setResults(resultData)
       setGenCount((c) => c + 1)
+      toast.success('Contenido generado correctamente')
 
       // Save to history
       saveGeneration(formData, resultData)
@@ -109,6 +124,7 @@ function App() {
       english: item.result_english,
     })
     setShowHistory(false)
+    toast.info('Generacion anterior cargada')
   }
 
   return (
@@ -116,38 +132,75 @@ function App() {
       <Header genCount={genCount} />
 
       <main className="flex-1 w-full max-w-[720px] mx-auto px-5 sm:px-6 py-8 sm:py-12">
-        {/* History toggle */}
-        {history.length > 0 && (
+        {/* Usage bar */}
+        {profile && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="flex justify-end mb-4"
+            className="flex items-center justify-between mb-6"
           >
-            <button
-              onClick={() => setShowHistory(!showHistory)}
-              style={{
-                background: showHistory ? 'rgba(245, 166, 35, 0.08)' : 'transparent',
-                border: `1px solid ${showHistory ? 'rgba(245, 166, 35, 0.3)' : 'rgba(255, 255, 255, 0.08)'}`,
-                color: showHistory ? '#f5a623' : 'rgba(245, 245, 240, 0.35)',
-                fontSize: 12,
-                fontWeight: 600,
+            {/* History toggle */}
+            {history.length > 0 && (
+              <button
+                onClick={() => setShowHistory(!showHistory)}
+                style={{
+                  background: showHistory ? 'rgba(245, 166, 35, 0.08)' : 'transparent',
+                  border: `1px solid ${showHistory ? 'rgba(245, 166, 35, 0.3)' : 'rgba(255, 255, 255, 0.08)'}`,
+                  color: showHistory ? '#f5a623' : 'rgba(245, 245, 240, 0.35)',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  fontFamily: "'Cabinet Grotesk', system-ui",
+                  padding: '6px 14px',
+                  borderRadius: 10,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
+                  transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                  letterSpacing: '0.3px',
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
+                </svg>
+                Historial ({history.length})
+              </button>
+            )}
+
+            {/* Usage indicator */}
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              marginLeft: 'auto',
+            }}>
+              <div style={{
+                width: 80,
+                height: 4,
+                borderRadius: 2,
+                background: 'rgba(255, 255, 255, 0.06)',
+                overflow: 'hidden',
+              }}>
+                <div style={{
+                  height: '100%',
+                  borderRadius: 2,
+                  background: profile.generations_used / profile.generations_limit > 0.8
+                    ? '#ef4444'
+                    : '#f5a623',
+                  width: `${Math.min((profile.generations_used / profile.generations_limit) * 100, 100)}%`,
+                  transition: 'width 0.5s ease',
+                }} />
+              </div>
+              <span style={{
+                fontSize: 11,
+                color: 'rgba(245, 245, 240, 0.25)',
                 fontFamily: "'Cabinet Grotesk', system-ui",
-                padding: '6px 14px',
-                borderRadius: 10,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 6,
-                transition: 'all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                letterSpacing: '0.3px',
-              }}
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <circle cx="12" cy="12" r="10" />
-                <polyline points="12 6 12 12 16 14" />
-              </svg>
-              Historial ({history.length})
-            </button>
+                fontWeight: 500,
+              }}>
+                {profile.generations_used}/{profile.generations_limit}
+              </span>
+            </div>
           </motion.div>
         )}
 
