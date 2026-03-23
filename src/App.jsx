@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import Header from './components/Header'
 import PropertyForm from './components/PropertyForm'
 import ResultsGrid from './components/ResultsGrid'
@@ -26,6 +26,7 @@ function App() {
 
   const { user, profile, refreshProfile } = useAuth()
   const toast = useToast()
+  const navigate = useNavigate()
 
   // Check for upgrade success
   useEffect(() => {
@@ -88,7 +89,8 @@ function App() {
 
       if (!response.ok) {
         if (data.limit_reached) {
-          toast.error('Limite alcanzado. Actualiza tu plan.')
+          toast.error('Limite alcanzado. Redirigiendo a planes...')
+          setTimeout(() => navigate('/pricing'), 1500)
         }
         throw new Error(data.error || `Error ${response.status}`)
       }

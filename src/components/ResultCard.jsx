@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { HiOutlineClipboardCopy, HiCheck } from 'react-icons/hi'
+import { useToast } from './Toast'
 
 export default function ResultCard({ channel, icon, content }) {
   const [copied, setCopied] = useState(false)
+  const toast = useToast()
   const [displayedText, setDisplayedText] = useState('')
   const [typing, setTyping] = useState(true)
 
@@ -29,6 +31,7 @@ export default function ResultCard({ channel, icon, content }) {
     try {
       await navigator.clipboard.writeText(content)
       setCopied(true)
+      toast.success(`${channel} copiado`)
       setTimeout(() => setCopied(false), 2000)
     } catch {
       const ta = document.createElement('textarea')
@@ -38,6 +41,7 @@ export default function ResultCard({ channel, icon, content }) {
       document.execCommand('copy')
       document.body.removeChild(ta)
       setCopied(true)
+      toast.success(`${channel} copiado`)
       setTimeout(() => setCopied(false), 2000)
     }
   }
