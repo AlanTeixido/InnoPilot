@@ -22,7 +22,7 @@ export default function LoadingSpinner() {
       <motion.p
         animate={{ opacity: [0.3, 0.8, 0.3] }}
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        style={{ fontSize: '14px', fontWeight: 500, color: 'rgba(245, 245, 240, 0.4)', fontFamily: 'Outfit' }}
+        style={{ fontSize: '14px', fontWeight: 500, color: 'rgba(245, 245, 240, 0.4)', fontFamily: "'Cabinet Grotesk', system-ui" }}
       >
         Generando contenido...
       </motion.p>

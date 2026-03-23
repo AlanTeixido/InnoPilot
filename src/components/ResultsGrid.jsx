@@ -59,7 +59,7 @@ export default function ResultsGrid({ results }) {
           className="w-2 h-2 rounded-full"
           style={{ backgroundColor: '#f0a500', animation: 'pulse-dot 2s ease-in-out infinite' }}
         />
-        <span style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(240, 165, 0, 0.5)', fontFamily: 'Outfit', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+        <span style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(240, 165, 0, 0.5)', fontFamily: "'Cabinet Grotesk', system-ui", letterSpacing: '1.5px', textTransform: 'uppercase' }}>
           Generado por IA
         </span>
       </motion.div>

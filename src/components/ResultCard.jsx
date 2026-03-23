@@ -59,12 +59,12 @@ export default function ResultCard({ channel, icon, content }) {
       >
         <div className="flex items-center gap-2">
           <span style={{ color: '#f0a500' }}>{icon}</span>
-          <span style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(245, 245, 240, 0.5)', fontFamily: 'Outfit', letterSpacing: '1.5px', textTransform: 'uppercase' }}>
+          <span style={{ fontSize: '11px', fontWeight: 600, color: 'rgba(245, 245, 240, 0.5)', fontFamily: "'Cabinet Grotesk', system-ui", letterSpacing: '1.5px', textTransform: 'uppercase' }}>
             {channel}
           </span>
           <div className="flex items-center gap-1 ml-1.5">
             <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#f0a500', animation: 'pulse-dot 2s ease-in-out infinite' }} />
-            <span style={{ fontSize: '9px', color: 'rgba(240, 165, 0, 0.4)', fontFamily: 'Outfit', letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 500 }}>IA</span>
+            <span style={{ fontSize: '9px', color: 'rgba(240, 165, 0, 0.4)', fontFamily: "'Cabinet Grotesk', system-ui", letterSpacing: '1px', textTransform: 'uppercase', fontWeight: 500 }}>IA</span>
           </div>
         </div>
 
@@ -85,7 +85,7 @@ export default function ResultCard({ channel, icon, content }) {
             <motion.span
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              style={{ fontSize: '10px', color: '#f0a500', fontFamily: 'Outfit', fontWeight: 500, background: 'rgba(240, 165, 0, 0.1)' }}
+              style={{ fontSize: '10px', color: '#f0a500', fontFamily: "'Cabinet Grotesk', system-ui", fontWeight: 500, background: 'rgba(240, 165, 0, 0.1)' }}
               className="absolute -bottom-7 right-0 px-2 py-0.5 rounded whitespace-nowrap"
             >
               Copiado!
@@ -96,7 +96,7 @@ export default function ResultCard({ channel, icon, content }) {
 
       {/* Content */}
       <div className="px-4 py-4 min-h-[160px] max-h-[320px] overflow-y-auto">
-        <p className="text-[13px] leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(245, 245, 240, 0.65)', fontFamily: 'Outfit' }}>
+        <p className="text-[13px] leading-relaxed whitespace-pre-wrap" style={{ color: 'rgba(245, 245, 240, 0.65)', fontFamily: "'Cabinet Grotesk', system-ui" }}>
           {displayedText}
           {typing && (
             <span

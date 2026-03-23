@@ -68,23 +68,23 @@ export default function PropertyForm({ onGenerate, loading }) {
 
   const isValid = form.ubicacion && form.metros
 
-  const labelClass = 'block text-[10px] font-medium uppercase tracking-[2px] mb-3 transition-colors duration-200'
-  const labelColor = { color: 'rgba(240, 165, 0, 0.45)', fontFamily: 'Outfit' }
+  const labelClass = 'block text-[10px] font-medium uppercase tracking-[2.5px] mb-3 transition-colors duration-200'
+  const labelColor = { color: 'rgba(240, 165, 0, 0.4)', fontFamily: "'Cabinet Grotesk', system-ui" }
   const inputClass = 'w-full bg-transparent text-sm py-2.5 transition-all duration-200 placeholder:text-zinc-700'
-  const inputStyle = { color: '#f5f5f0', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', fontFamily: 'Outfit' }
+  const inputStyle = { color: '#f5f5f0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', fontFamily: "'Cabinet Grotesk', system-ui", letterSpacing: '-0.01em' }
 
   return (
     <motion.form
       onSubmit={handleSubmit}
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, delay: 0.1 }}
+      transition={{ type: 'spring', stiffness: 100, damping: 20, delay: 0.1 }}
       className={`relative p-10 sm:p-12 ${loading ? 'form-loading' : ''}`}
       style={{
         background: '#111114',
-        border: '1px solid rgba(245, 166, 35, 0.15)',
-        borderRadius: '20px',
-        boxShadow: '0 0 80px rgba(245, 166, 35, 0.06), 0 32px 64px rgba(0, 0, 0, 0.7)',
+        border: '1px solid rgba(245, 166, 35, 0.12)',
+        borderRadius: '22px',
+        boxShadow: '0 0 80px rgba(245, 166, 35, 0.04), 0 32px 64px rgba(0, 0, 0, 0.6)',
       }}
     >
       {/* Tipo de propiedad */}

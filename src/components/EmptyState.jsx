@@ -19,7 +19,7 @@ export default function EmptyState() {
         <h3 className="font-heading text-xl mb-2" style={{ color: 'rgba(245, 245, 240, 0.6)', fontWeight: 600 }}>
           Listo para generar
         </h3>
-        <p className="text-sm max-w-xs mx-auto leading-relaxed" style={{ color: 'rgba(245, 245, 240, 0.25)', fontFamily: 'Outfit' }}>
+        <p className="text-sm max-w-xs mx-auto leading-relaxed" style={{ color: 'rgba(245, 245, 240, 0.25)', fontFamily: "'Cabinet Grotesk', system-ui" }}>
           Rellena el formulario con los datos de tu propiedad y genera contenido profesional para 4 canales al instante.
         </p>
 
@@ -30,7 +30,7 @@ export default function EmptyState() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 + i * 0.1 }}
-              style={{ fontSize: '10px', fontWeight: 500, color: 'rgba(240, 165, 0, 0.25)', fontFamily: 'Outfit', letterSpacing: '1.5px', textTransform: 'uppercase' }}
+              style={{ fontSize: '10px', fontWeight: 500, color: 'rgba(240, 165, 0, 0.25)', fontFamily: "'Cabinet Grotesk', system-ui", letterSpacing: '1.5px', textTransform: 'uppercase' }}
             >
               {ch}
             </motion.span>
